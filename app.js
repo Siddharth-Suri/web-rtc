@@ -37,16 +37,14 @@ class connectToWebRTC {
         })
         
         
-        this.localSDP = this.device.localDescription.sdp
-        document.getElementById('offer-out').value = this.localSDP
-        console.log(typeof this.device.localDescription.sdp);
-        console.log("SDP String: \n"+ this.localSDP)
+        this.localSDP = this.device.localDescription
+        document.getElementById('offer-out').value = JSON.stringify(this.localSDP)
     }
     
     // Called by person2
     async establishConnectionRemote(){
-        const value = document.getElementById("remote-string").value
-
+        const value = JSON.parse(document.getElementById("remote-string").value)
+        
         if(!value) {
             console.log("empty value")
             return 
@@ -64,7 +62,7 @@ class connectToWebRTC {
             }
         })
 
-        document.getElementById('answer-out').value = this.device.localDescription.sdp
+        document.getElementById('answer-out').value = JSON.stringify(this.device.localDescription) 
         return this.device.localDescription.sdp
     }
 
@@ -80,11 +78,11 @@ const connection = new connectToWebRTC('stun:stun.l.google.com:19302');
 
 async function createOffer() {
     await connection.startCamera()
-    connection.establishConnectionLocal();
+    await connection.establishConnectionLocal();
 }
 async function acceptOffer() {
     await connection.startCamera()
-    connection.establishConnectionRemote();
+    await connection.establishConnectionRemote();
 }
 
 async function finalize() {

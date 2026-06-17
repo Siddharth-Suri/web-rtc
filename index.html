@@ -1,19 +1,43 @@
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+</head>
 <body>
-    <div>
+    <div class="video-container">
         <div>
             <video id="local" autoplay muted width="400"></video>
         </div>
+    
         <div>
             <video id="remote" autoplay width="400"></video>
         </div>
     </div>
-    <div>
-        <button onclick="createOffer()">Generate local SDP</button>
-        <input id="remote-string" title="Person 1 Enter Remote SDP string: " placeholder="{this format...}"></input>
-        <input id="finalize-string" title="Person 2 Enter Remote SDP string: " placeholder="{this format...}"></input>
-        <button >Click me after setting string in input box</button>
+
+    <hr>
+
+    <div class="section">
+        <h3>Person 1</h3>
+        <button onclick="createOffer()">Step 1: Generate Offer</button>
+        <p>Copy this and send to Person 2</p>
+        <textarea id="offer-out" rows="4" cols="60" readonly></textarea>
+
+        <p>Paste Person 2's answer here:</p>
+        <input type="text" id="finalize-string" placeholder="{paste answer here}">
+        <button onclick="finalize()">Step 3: Finalize Connection</button>
+    </div>
+
+    <hr>
+
+    <!-- PERSON 2's steps -->
+    <div class="section">
+        <h3>Person 2 </h3>
+        <p>Paste Person 1's offer here:</p>
+        <input type="text" id="remote-string" placeholder="{paste offer here}">
+        <button onclick="acceptOffer()">Step 2: Accept Offer & Generate Answer</button>
+
+        <p>Copy this and send back to Person 1:</p>
+        <textarea id="answer-out" rows="4" cols="60" readonly></textarea>
     </div>
 </body>
-
 
 <script src="app.js"></script>

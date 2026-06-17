@@ -14,7 +14,7 @@ class connectToWebRTC {
 
     async startCamera(){
         const stream = await navigator.mediaDevices.getUserMedia({video:true , audio: true})
-        document.getElementById('local') = stream;
+        document.getElementById('local').srcObject = stream;
         stream.getTracks().forEach(track => {
             this.device.addTrack(track, stream);
           });
@@ -38,14 +38,19 @@ class connectToWebRTC {
         
         
         this.localSDP = this.device.localDescription.sdp
-        console.log("SDP String: "+ this.localSDP)
+        document.getElementById('offer-out').value = this.localSDP
+        console.log(typeof this.device.localDescription.sdp);
+        console.log("SDP String: \n"+ this.localSDP)
     }
     
     // Called by person2
     async establishConnectionRemote(){
-        const value = JSON.parse(document.getElementById("remote-string").value)
+        const value = document.getElementById("remote-string").value
 
-        if(!value) return 
+        if(!value) {
+            console.log("empty value")
+            return 
+        }
 
         await this.device.setRemoteDescription(value)
         const answer = await this.device.createAnswer()
@@ -58,7 +63,8 @@ class connectToWebRTC {
                 }
             }
         })
-        console.log(answer)
+
+        document.getElementById('answer-out').value = this.device.localDescription.sdp
         return this.device.localDescription.sdp
     }
 

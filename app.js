@@ -1,4 +1,3 @@
-const connection = new connectToWebRTC('stun:stun.l.google.com:19302');
 class connectToWebRTC {
 
     constructor(stunServerUrl){
@@ -8,7 +7,19 @@ class connectToWebRTC {
             }]
         }) 
         this.localSDP = null
+        this.device.ontrack = (event) =>{
+            document.getElementById('remote').srcObject = event.streams[0]
+        }
     }
+
+    async startCamera(){
+        const stream = await navigator.mediaDevices.getUserMedia({video:true , audio: true})
+        document.getElementById('local') = stream;
+        stream.getTracks().forEach(track => {
+            this.device.addTrack(track, stream);
+          });
+    }
+
     // Called by person1
     async establishConnectionLocal(){
         this.offer = await this.device.createOffer()
@@ -33,6 +44,9 @@ class connectToWebRTC {
     // Called by person2
     async establishConnectionRemote(){
         const value = JSON.parse(document.getElementById("remote-string").value)
+
+        if(!value) return 
+
         await this.device.setRemoteDescription(value)
         const answer = await this.device.createAnswer()
         await this.device.setLocalDescription(answer);
@@ -55,6 +69,18 @@ class connectToWebRTC {
     }
 }
     
-function createOffer() {
+
+const connection = new connectToWebRTC('stun:stun.l.google.com:19302');
+
+async function createOffer() {
+    await connection.startCamera()
     connection.establishConnectionLocal();
+}
+async function acceptOffer() {
+    await connection.startCamera()
+    connection.establishConnectionRemote();
+}
+
+async function finalize() {
+    await connection.finalizeConnection();
 }

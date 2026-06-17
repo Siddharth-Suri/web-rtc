@@ -1,1 +1,16 @@
-<video></video>
+<div>
+    <div>
+        <video id="local" autoplay muted width="400"></video>
+    </div>
+    <div>
+        <video id="remote" autoplay width="400"></video>
+    </div>
+</div>
+<div>
+    <button onclick="createOffer()">Generate local SDP</button>
+    <input id="remote-string" title="Enter Remote SDP string: " placeholder="{this format...}"></input>
+    <button >Click me after setting string in input box</button>
+</div>
+
+
+<script src="app.js"></script>

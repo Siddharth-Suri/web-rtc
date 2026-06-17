@@ -9,16 +9,11 @@ class connectToWebRTC {
         }) 
         this.localSDP = null
     }
-
-    establishConnectionRemote(){
-        const value =  document.getElementById("remote-string").value
-        this.device.setRemoteDescription(value)
-
-    }
+    // Called by person1
     async establishConnectionLocal(){
         this.offer = await this.device.createOffer()
         await this.device.setLocalDescription(this.offer)
-
+        
         await new Promise((resolve)=>{
             this.device.onicecandidate = (event) => {
                 // this needs to fire when all candidates are completed 
@@ -29,13 +24,37 @@ class connectToWebRTC {
                 }
             }
         })
-
+        
+        
         this.localSDP = this.device.localDescription.sdp
         console.log("SDP String: "+ this.localSDP)
-        return 
+    }
+    
+    // Called by person2
+    async establishConnectionRemote(){
+        const value = JSON.parse(document.getElementById("remote-string").value)
+        this.device.setRemoteDescription(value)
+        const answer = this.device.createAnswer()
+        await this.device.setLocalDescription(answer);
+
+        await new Promise((resolve)=>{
+            this.device.onicecandidate = (event)=>{
+                if(!event.candidate){
+                    resolve()
+                }
+            }
+        })
+        console.log(answer)
+        return answer
+    }
+
+    // Called by person1 after having answer string
+    async finalizeConnection(){
+        const value = JSON.parse(document.getElementById("remote-string").value)
+        await this.device.setRemoteDescription(value)
     }
 }
-
+    
 function createOffer() {
     connection.establishConnectionLocal();
     document.getElementById('offer-out').value = sdp;

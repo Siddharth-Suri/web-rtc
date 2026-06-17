@@ -33,8 +33,8 @@ class connectToWebRTC {
     // Called by person2
     async establishConnectionRemote(){
         const value = JSON.parse(document.getElementById("remote-string").value)
-        this.device.setRemoteDescription(value)
-        const answer = this.device.createAnswer()
+        await this.device.setRemoteDescription(value)
+        const answer = await this.device.createAnswer()
         await this.device.setLocalDescription(answer);
 
         await new Promise((resolve)=>{
@@ -45,17 +45,16 @@ class connectToWebRTC {
             }
         })
         console.log(answer)
-        return answer
+        return this.device.localDescription.sdp
     }
 
     // Called by person1 after having answer string
     async finalizeConnection(){
-        const value = JSON.parse(document.getElementById("remote-string").value)
+        const value = JSON.parse(document.getElementById("finalize-string").value)
         await this.device.setRemoteDescription(value)
     }
 }
     
 function createOffer() {
     connection.establishConnectionLocal();
-    document.getElementById('offer-out').value = sdp;
 }

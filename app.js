@@ -2,12 +2,21 @@ class connectToWebRTC {
 
     constructor(stunServerUrl){
         this.device = new RTCPeerConnection({
-            iceServers:[{
-                urls: stunServerUrl
+            iceServers:[{ urls: 'stun:stun.l.google.com:19302' },
+            {
+                urls: [
+                    'turn:openrelay.metered.ca:80',
+                    'turn:openrelay.metered.ca:443',
+                    'turn:openrelay.metered.ca:443?transport=tcp'
+                ],
+                username: 'openrelayproject',
+                credential: 'openrelayproject'
             }]
         }) 
         this.localSDP = null
         this.device.ontrack = (event) =>{
+            console.log("Received remote track");
+            console.log(event.streams);
             document.getElementById('remote').srcObject = event.streams[0]
         }
     }

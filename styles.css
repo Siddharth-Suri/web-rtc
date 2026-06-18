@@ -5,7 +5,8 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 500;
     max-width: 1000px;
     margin: 30px auto;
     padding: 20px;
@@ -67,4 +68,8 @@ p {
     border-radius: 10px;
     margin-bottom: 20px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+button:disabled {
+    cursor: not-allowed;
 }

@@ -2,16 +2,15 @@ class connectToWebRTC {
 
     constructor(stunServerUrl){
         this.device = new RTCPeerConnection({
-            iceServers:[{ urls: 'stun:stun.l.google.com:19302' },
-            {
-                urls: [
-                    'turn:openrelay.metered.ca:80',
-                    'turn:openrelay.metered.ca:443',
-                    'turn:openrelay.metered.ca:443?transport=tcp'
-                ],
-                username: 'openrelayproject',
-                credential: 'openrelayproject'
-            }]
+            // if anybody uses this in the future , you would need your own stun/turn servers 
+            // if connection is peer to peer you won't need turn 
+            // however if you talking to someone on a different network you would need turn 
+            iceServers: [
+                {
+                  urls: "stun:stun.relay.metered.ca:80",
+                }
+                // add TURN servers here 
+            ],
         }) 
         this.localSDP = null
         this.device.ontrack = (event) =>{
@@ -86,14 +85,20 @@ class connectToWebRTC {
 const connection = new connectToWebRTC('stun:stun.l.google.com:19302');
 
 async function createOffer() {
+    const button = document.getElementById('b-1')
+    button.disabled = true;
     await connection.startCamera()
     await connection.establishConnectionLocal();
 }
 async function acceptOffer() {
+    const button = document.getElementById('b-2')
+    button.disabled = true;
     await connection.startCamera()
     await connection.establishConnectionRemote();
 }
 
 async function finalize() {
+    const button = document.getElementById('b-3')
+    button.disabled = true;
     await connection.finalizeConnection();
 }
